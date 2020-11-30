@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
 election_data = pd.read_csv('usa-2016-presidential-election-by-county.csv', delimiter=";")
 # print(election_data.shape)
@@ -69,7 +71,15 @@ test_x = test[:, :-1]
 test_y = test[:, -1]
 print(test.shape)
 
-# Need to standardize datasets?
+#-------------------------------------- BEGIN MODEL TESTING HERE ----------------------------------------------------
+
+print("\n>>> Beginning model testing...")
+print("Model 1: Logistic Regression, C=1, penalty=l1")
+lr = LogisticRegression(penalty='l1', C=1.0, random_state=1, solver='liblinear', multi_class='ovr')
+lr.fit(train_x, train_y)
+accuracy = lr.score(validate_x, validate_y)
+print("Accuracy: %.3f" % accuracy)
+
 
 
 
