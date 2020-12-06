@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score
 
 election_data = pd.read_csv('usa-2016-presidential-election-by-county.csv', delimiter=";")
@@ -29,7 +30,7 @@ election_data = election_data.dropna()
 # If Democrat value is > 50, then set label = 1
 
 print(">>> Preprocessing data...")
-print("Dataset shape" + str(election_data.shape))
+print("Dataset shape: " + str(election_data.shape))
 
 data_labels = []
 for value in election_data['Republicans 2016']:
@@ -65,13 +66,13 @@ print("Training set shape: " + str(train.shape))
 validate = np.array(validate).astype("float")
 validate_x = validate[:, :-1]
 validate_y = validate[:, -1]
-print("Validate set shape:" + str(validate.shape))
+print("Validate set shape: " + str(validate.shape))
 
 # Preprocessing test x and y
 test = np.array(test).astype("float")
 test_x = test[:, :-1]
 test_y = test[:, -1]
-print("Test set shape:" + str(test.shape))
+print("Test set shape: " + str(test.shape))
 
 #-------------------------------------- BEGIN MODEL TESTING HERE ----------------------------------------------------
 
@@ -100,7 +101,23 @@ svm.fit(train_x, train_y)
 accuracy = svm.score(validate_x, validate_y)
 print("Accuracy: %.3f" % accuracy)
 
+print("\n>>> Beginning Baseline model training...")
+print("Baseline Model 1: Strategy = \"stratified\"")
+dummy = DummyClassifier(strategy="stratified")
+dummy.fit(train_x, train_y)
+dummy.predict(validate_x)
+accuracy = dummy.score(validate_x, validate_y)
+print("Accuracy : %.3f" % accuracy)
+
+print("\nBaseline Model 2: Strategy = \"uniform\"")
+dummy = DummyClassifier(strategy="uniform")
+dummy.fit(train_x, train_y)
+dummy.predict(validate_x)
+accuracy = dummy.score(validate_x, validate_y)
+print("Accuracy : %.3f" % accuracy)
+
 print("\n>>> Model Analysis: Logistic Regression and SVM give very similar results; best model is most likely Model 1")
+
 print("\n>>> Testing our best model on test data set:")
 lr = LogisticRegression(penalty='l1', C=1.0, random_state=1, solver='liblinear', multi_class='ovr')
 lr.fit(train_x, train_y)
@@ -108,4 +125,6 @@ accuracy = lr.score(test_x, test_y)
 print("Accuracy: %.3f" % accuracy)
 
 print("\nResults: Our model is around 90% accurate at predicting whether someone votes Democrat or Republican."+
-      "\nThis model seems fairly reliable and well fitted, since the validation and test set accuracy are both around 90%.")
+      "\nThis model seems fairly reliable and well fitted, since the validation and test set accuracy are both around 90%."
+      "\nOur baseline models' accuracies are around 50-75%, which means that our model performs significantly better than "
+      "\na baseline model.")
