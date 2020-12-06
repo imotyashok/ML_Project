@@ -26,8 +26,9 @@ election_data = election_data.dropna()
 # Now we will prepare our labels: we'll use -1 for Republican, and 1 for Democrat;
 # If Republican value is > 50, then set label = -1,
 # If Democrat value is > 50, then set label = 1
-#
-print(election_data.shape)
+
+print(">>> Preprocessing data...")
+print("Dataset shape" + str(election_data.shape))
 
 data_labels = []
 for value in election_data['Republicans 2016']:
@@ -48,28 +49,28 @@ election_data = election_data.drop(columns=['ST', 'County', 'Republicans 2016', 
 
 # Adding the labels column into the dataset
 election_data["Labels"] = data_labels
-print(election_data.columns)
 
 # Splitting data into 70% test, 15% validate, 15% train
+print("\n>>> Splitting data into 70% train, 15% validate, and 15% test sets:")
 train, validate, test = np.split(election_data.sample(frac=1), [int(.7*len(election_data)), int(.85*len(election_data))])
 
 # Preprocessing train x and y
 train = np.array(train).astype("float")
 train_x = train[:, :-1]
 train_y = train[:, -1]
-print(train.shape)
+print("Training set shape: " + str(train.shape))
 
 # Preprocessing validation x and y
 validate = np.array(validate).astype("float")
 validate_x = validate[:, :-1]
 validate_y = validate[:, -1]
-print(validate.shape)
+print("Validate set shape:" + str(validate.shape))
 
 # Preprocessing test x and y
 test = np.array(test).astype("float")
 test_x = test[:, :-1]
 test_y = test[:, -1]
-print(test.shape)
+print("Test set shape:" + str(test.shape))
 
 #-------------------------------------- BEGIN MODEL TESTING HERE ----------------------------------------------------
 
@@ -80,7 +81,15 @@ lr.fit(train_x, train_y)
 accuracy = lr.score(validate_x, validate_y)
 print("Accuracy: %.3f" % accuracy)
 
+print("\nModel 1: Logistic Regression, C=0.001, penalty=l1")
+lr = LogisticRegression(penalty='l1', C=0.001, random_state=1, solver='liblinear', multi_class='ovr')
+lr.fit(train_x, train_y)
+accuracy = lr.score(validate_x, validate_y)
+print("Accuracy: %.3f" % accuracy)
 
-
-
+print("\nModel 1: Logistic Regression, C=100, penalty=l1")
+lr = LogisticRegression(penalty='l1', C=100, random_state=1, solver='liblinear', multi_class='ovr')
+lr.fit(train_x, train_y)
+accuracy = lr.score(validate_x, validate_y)
+print("Accuracy: %.3f" % accuracy)
 
