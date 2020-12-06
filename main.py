@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 election_data = pd.read_csv('usa-2016-presidential-election-by-county.csv', delimiter=";")
@@ -81,15 +82,22 @@ lr.fit(train_x, train_y)
 accuracy = lr.score(validate_x, validate_y)
 print("Accuracy: %.3f" % accuracy)
 
-print("\nModel 1: Logistic Regression, C=0.001, penalty=l1")
+print("\nModel 2: Logistic Regression, C=0.001, penalty=l1")
 lr = LogisticRegression(penalty='l1', C=0.001, random_state=1, solver='liblinear', multi_class='ovr')
 lr.fit(train_x, train_y)
 accuracy = lr.score(validate_x, validate_y)
 print("Accuracy: %.3f" % accuracy)
 
-print("\nModel 1: Logistic Regression, C=100, penalty=l1")
+print("\nModel 3: Logistic Regression, C=100, penalty=l1")
 lr = LogisticRegression(penalty='l1', C=100, random_state=1, solver='liblinear', multi_class='ovr')
 lr.fit(train_x, train_y)
 accuracy = lr.score(validate_x, validate_y)
 print("Accuracy: %.3f" % accuracy)
 
+print("\nModel 4: SVM, C=1.0")
+svm = SVC(kernel='linear', C=1.0, random_state=1)
+svm.fit(train_x, train_y)
+accuracy = svm.score(validate_x, validate_y)
+print("Accuracy: %.3f" % accuracy)
+
+print("\n>>> Results: Logistic Regression and SVM give very similar results; best model is most likely Model 1")
