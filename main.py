@@ -15,12 +15,28 @@ election_data = pd.read_csv('usa-2016-presidential-election-by-county.csv', deli
 # This dataset has 159 columns and 3143 rows; we don't need most of the columns. We're just interested in:
 #   'State', 'ST', 'County', 'Republicans 2016', 'Democrats 2016', 'Less Than High School Diploma', 'At Least High School Diploma',
 #   "At Least Bachelors's Degree", 'Graduate Degree', 'White (Not Latino) Population', 'African American Population',
-#   'Native American Population', 'Asian American Population', 'Other Race or Races', 'Latino Population', 'Total Population',
+#   'Native American Population', 'Asian American Population', 'Other Race or Races', 'Latino Population', 'Median Age', 'Uninsured'
 # We'll keep ST and County for now in case we'll need it later
 election_data = election_data[['ST', 'County', 'Republicans 2016', 'Democrats 2016', 'Less Than High School Diploma',
                 'At Least High School Diploma', "At Least Bachelors's Degree", 'Graduate Degree', 'White (Not Latino) Population',
                 'African American Population', 'Native American Population', 'Asian American Population', 'Other Race or Races',
-                'Latino Population']]
+                'Latino Population', 'Median Age', 'Uninsured']]
+
+# ------------------------ FEATURE TESTING ----------------------------------------------------------------------------------------------------
+# Education Level
+# election_data = election_data[['ST', 'County', 'Republicans 2016', 'Democrats 2016', 'Less Than High School Diploma',
+#                 'At Least High School Diploma', "At Least Bachelors's Degree", 'Graduate Degree']]
+# Results: accuracy is around 85%
+
+# Race
+# election_data = election_data[['ST', 'County', 'Republicans 2016', 'Democrats 2016', 'White (Not Latino) Population', 'African American Population',
+#                                'Native American Population', 'Asian American Population', 'Other Race or Races', 'Latino Population']]
+# Results: accuracy is around 90%
+
+# Median Age and Uninsured rate
+#election_data = election_data[['ST', 'County', 'Republicans 2016', 'Democrats 2016', 'Median Age', 'Uninsured']]
+# Results: accuracy is around 80%
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 # Getting rid of any null values
 election_data = election_data.dropna()
